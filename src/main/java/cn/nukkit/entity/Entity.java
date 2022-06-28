@@ -1133,10 +1133,8 @@ public abstract class Entity extends Location implements Metadatable {
                 Player p = (Player) this;
                 boolean totem = false;
                 if (p.getOffhandInventory().getItem(0).getId() == ItemID.TOTEM) {
-                    p.getOffhandInventory().clear(0);
                     totem = true;
                 } else if (p.getInventory().getItemInHand().getId() == ItemID.TOTEM) {
-                    p.getInventory().clear(p.getInventory().getHeldItemIndex());
                     totem = true;
                 }
                 if (totem) {
@@ -1154,6 +1152,12 @@ public abstract class Entity extends Location implements Metadatable {
                     pk.eid = this.getId();
                     pk.event = EntityEventPacket.CONSUME_TOTEM;
                     p.dataPacket(pk);
+
+                    if (p.getOffhandInventory().getItem(0).getId() == ItemID.TOTEM) {
+                        p.getOffhandInventory().clear(0);
+                    } else {
+                        p.getInventory().clear(p.getInventory().getHeldItemIndex());
+                    }
 
                     source.setCancelled(true);
                     return false;
